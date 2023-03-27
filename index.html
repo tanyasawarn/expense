@@ -1,77 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-  <title>Expense</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet"  href="style.css">
+
+    <h1 class="heading">Expense Tracker</h1> 
 </head>
 <body>
-  <header id="main-header" >
-    <div class="container">
-      <h1 id="header-title">Expense Tracker <span style="display:none">123</span></h1><br>
-    </div>
-  </header>
- <form onsubmit="savetolocalstorage(event)">
-    <label for="expenseamount">Chose ExpenseAmount</label>
-    <input type="number" id='amount' name="amount" min="1"  max="100000000000">
-    <label for="description">Chose Description</label>
-    <input type="text" id='desc' name="description"> 
-    <label for="category">Chose a Category</label>
-    <select name="category"  id='category'>
-        <option value="Movie">Movie</option>
-        <option value="Food">Food</option>
-        <option value="Vacation">Vacation</option>
-        <option value="shopping">Shopping</option>
-    </select>
-    <button type="submit" value="Add Expense">Add Expense</button>
- </form>
-  </div>
-  <ul id='details'></ul>
-<script >
-    function savetolocalstorage(event)
+   <div class="container">
+    <form class="form-inline" onsubmit="saveToLocalStorage(event)">
+            <label for="chooseexpenseamount">choose Expense Amount</label>
+            <input type="number" class="form-inline" id="amount" name="amount">
+            <label for="choosedescription">Choose Description</label>
+            <input type="text" class="form-inline" id="description" name="description">
+            <label for="choosecategory">Choose Category</label>
+            <select class="form-inline" id="category" name="category">
+            <option>Food</option>
+            <option>Movie</option>
+            <option>Travel</option>
+            <option>Others</option>
+        </select>
+        <button class="btn btn-primary">Add Expense</button>
+    </form>
+   </div>
+   <ul id="userDetails"></ul>
+   <script>
+    function saveToLocalStorage(event)
     {
         event.preventDefault();
-        const amount=event.target.amount.value;
-        const desc=event.target.description.value;
-        const cate=event.target.category.value;
+        const amount =event.target.amount.value;
+        const description =event.target.description.value;
+        const category =event.target.category.value;
         const obj={
             amount,
-            desc,
-            cate
+            description,
+            category
         }
-        localStorage.setItem('userdetail',JSON.stringify(obj));
-            showUserOnScreen(obj)
-         }
-         function showUserOnScreen(obj)
-         {
-            const parentele=document.getElementById('details')
-            const childele=document.createElement('li')
-            childele.textContent=obj.amount + '-' + obj.desc + '-' + obj.cate;
-            parentele.appendChild(childele)
+        localStorage.setItem(obj.amount,JSON.stringify(obj));
+        showUserOnScreen(obj)
+    }
+    function showUserOnScreen(obj)
+    {
+    const parentElement = document.getElementById('userDetails');
+    const childElement = document.createElement('li');
+    childElement.textContent = obj.amount + '-' + obj.description + '-' + obj.category;
+    const deleteButton = document.createElement('input');
+    deleteButton.type = "button";
+    deleteButton.value = "Delete";
+    deleteButton.onclick = () =>{
+        localStorage.removeItem(obj.description)
+        parentElement.removeChild(childElement)
+    }
+    const editButton = document.createElement('input');
+    editButton.type ="button";
+    editButton.value = "Edit";
+    editButton.onclick = () =>{
+        localStorage.removeItem(obj.amount)
+        parentElement.removeChild(childElement)
+        document.getElementById('amount').value = obj.amount;
+        document.getElementById('description').value = obj.description;
+        document.getElementById('category').value =obj.category;
+    } 
 
-            const deletebutton=document.createElement('input');
-            deletebutton.type='button'
-            deletebutton.value='Delete'
-            deletebutton.onclick=()=>{
-                localStorage.removeItem(obj.email)
-                parentele.removeChild(childele)
-                }
-                const editbutton=document.createElement('input')
-                editbutton.type='button'
-                editbutton.value='Edit'
-                editbutton.onclick=()=>{
-                    localStorage.removeItem(obj.email)
-                    parentele.removeChild(childele)
-                    document.getElementById('unameInputTag').value=obj.name;
-                    document.getElementById('emailInputTag').value=obj.email;
-                }
-                childele.appendChild(deletebutton)
-            childele.appendChild(editbutton)
-            parentele.appendChild(childele)
-         } 
-    
-</script>
+    childElement.appendChild(deleteButton)
+    childElement.appendChild(editButton)
+    parentElement.appendChild(childElement)
+    }
+   </script>
 </body>
 </html>
